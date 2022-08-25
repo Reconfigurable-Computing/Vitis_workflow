@@ -7,6 +7,15 @@ FPGA：  ZCU104、Alevo U50
 
 ![图1 vitis工作流程](./img/vitis_workflow.image)
 
+## 教程目录
+
+1. [overall](./overall/README.md)：整体加速器部署流程简介，并给出一个简单样例作为参考。
+
+2. [multi-kernel](./multi-kernel/README.md)：加速器多核部署方案样例，涉及单核多部署，多核单部署以及多核多部署。
+
+3. [Makefile](./Makefile/README.md)：vitis工具流编译文件规则，一键式部署方案设计。
+
+
 ## 环境准备
 
 ### 安装所需依赖
