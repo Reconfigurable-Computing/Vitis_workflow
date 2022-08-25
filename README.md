@@ -13,7 +13,9 @@ FPGA：  ZCU104、Alevo U50
 
 2. [multi-kernel](./multi-kernel/README.md)：加速器多核部署方案样例，涉及单核多部署，多核单部署以及多核多部署。
 
-3. [Makefile](./Makefile/README.md)：vitis工具流编译文件规则，一键式部署方案设计。
+3. [host](./host/README.md)：vitis加速应用的上层控制代码编写。
+
+4. [Makefile](./Makefile/README.md)：vitis工具流编译文件规则，一键式部署方案设计。
 
 
 ## 环境准备
