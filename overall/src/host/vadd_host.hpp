@@ -3,9 +3,9 @@
 #include <sys/time.h>
 
 typedef int dt;
-#define VADD_XCL "../../test_system_hw_link/Hardware/binary_container_1.xclbin"
 
-void vadd_op(dt *in1, dt *in2, dt *res, int LEN){
+
+void vadd_op(dt *in1, dt *in2, dt *res, int LEN,std::string xclbin){
 	EventTimer et;
 
 	cl_int fail;
@@ -23,7 +23,7 @@ void vadd_op(dt *in1, dt *in2, dt *res, int LEN){
 
 	cl::CommandQueue q(context, device, CL_QUEUE_PROFILING_ENABLE | CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE, &fail); //command queue
 
-	cl::Program::Binaries xclBins = xcl::import_binary_file(VADD_XCL); //load the binary file
+	cl::Program::Binaries xclBins = xcl::import_binary_file(xclbin); //load the binary file
 	devices.resize(1);
 	cl::Program program(context, devices, xclBins, NULL, &fail); // pragram the fpga
 
