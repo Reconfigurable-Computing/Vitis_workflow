@@ -106,3 +106,4 @@ selectTreeTable("vmul_host.hpp", "test_system > test > src", "Explorer", "Projec
 activateView("test_kernels", "test_kernels/test_kernels.prj", "SDXSettingsEditor", "CTabItem.TEST_KERNELS");
 selectTreeTable("test_system_hw_link.prj", "test_system > test_system_hw_link", EventType.DOUBLE_CLICK, "Explorer", "ProjectExplorer", "TreeViewer.NavigatorContentServiceContentProvider");
 selectToolBarButton("Vitis Shell", "test_system_hw_link", "WorkbenchWindow", "ToolItem.VITIS_SHELL");
+selectTreeTable("vmul_kernel", "binary_container_2", "test_system_hw_link", "SDXSettingsEditor", "TreeViewer.HwLinkAcceleratorTableContentProvider");
