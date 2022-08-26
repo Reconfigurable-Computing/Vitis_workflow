@@ -81,8 +81,8 @@
 	+ 设置kernel端口映射
 		- 在下图中的Memory选项中可以配置kernel的端口映射信息
 
-![图15 设置link编译时频率约束](../img/link_setting.png)
-
+        ![图15 设置link编译时频率约束](../img/link_setting.png)
+        
 	+ 关联vivado软件，工程编译以后可用
 		- 在Assistant界面右键hw_link项目下的container部分
 		- 单击Open Vivado Project进入vivado工程快速调试
