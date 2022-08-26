@@ -11,7 +11,7 @@ FPGA：  ZCU104、Alevo U50
 
 1. [overall](./overall/README.md)：整体加速器部署流程简介，并给出一个简单样例作为参考。
 
-2. [multi-kernel](./multi-kernel/README.md)：加速器多核部署方案样例，涉及单核多部署，多核单部署以及多核多部署。
+2. [multi-kernel](./multi-kernels/README.md)：加速器多核部署方案样例，涉及单核多部署，多核单部署以及多核多部署。
 
 3. [host](./host/README.md)：vitis加速应用的上层控制代码编写。
 
