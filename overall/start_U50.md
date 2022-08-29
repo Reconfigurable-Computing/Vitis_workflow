@@ -1,6 +1,8 @@
-## 应用工程创建
+# Alveo U50板卡加速器部署示例
 
-### 建立工程
+## 1 应用工程创建
+
+### 1.1 建立工程
 1. 在终端直接运行`vitis`，设置工作目录
 
 ![图3 workspace设置](../img/workspace.jpg)
@@ -21,7 +23,7 @@
 
 ![图8 创建空白应用工程](../img/empty_app.jpg)
 
-### kernel端配置
+### 1.2 kernel端配置
 
 1. 添加kernel代码，将编写好的kernel代码复制或导入到如图的src文件夹内
 
@@ -48,13 +50,13 @@
 
     ![图12 打开vitis_hls](../img/kernel_vitis_hls.png)
 
-### host端配置
+### 1.3 host端配置
 
 1. 添加host代码，将编写好的host代码复制或导入到如图的src文件夹内
 
 ![图13 添加host代码](../img/host_code.jpg)
 
-### HW-link配置
+### 1.4 HW-link配置
 
 1. 打开图中的test_system_hw_link.prj配置link信息
 2. 点击Add Binary Container创建一个容器
@@ -81,7 +83,7 @@
 		
     ![图16 打开vivado](../img/link_vivado.jpg)
 
-## 应用工程编译
+## 2 应用工程编译
 
 在Explorer界面选中System后，便可在菜单中点击build按钮，其中编译分为三种模式
 
@@ -91,7 +93,7 @@
 
 ![图17 编译工程](../img/build.jpg)
 
-## 硬件部署
+## 3 硬件部署
 
 1. 打开vitis命令行
 

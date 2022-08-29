@@ -7,7 +7,7 @@ FPGA：  ZCU104、Alevo U50
 
 ![图1 vitis工作流程](./img/vitis_workflow.image)
 
-## 教程目录
+## 1 教程目录
 
 1. [overall](./overall/README.md)：整体加速器部署流程简介，并给出一个简单样例作为参考。
 
@@ -18,9 +18,9 @@ FPGA：  ZCU104、Alevo U50
 4. [Makefile](./Makefile/README.md)：vitis工具流编译文件规则，一键式部署方案设计。
 
 
-## 环境准备
+## 2 环境准备
 
-### 安装所需依赖
+### 2.1 安装所需依赖
 ```
 sudo apt-get install ocl-icd-libopencl1 opencl-headers ocl-icd-opencl-dev
 sudo add-apt-repository ppa:xorg-edgers/ppa 
@@ -42,7 +42,7 @@ curl -1sLf \
 sudo apt-get update
 sudo apt-get install balena-etcher-electron
 ```
-### 下载安装vitis相关工具
+### 2.2 下载安装vitis相关工具
 
 1. [安装vitis软件](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vitis.html)，这里下载的版本号最好要与之后下载相关内容保持一致。
 	例如：这里下载了vitis2020.2，后续的软件和镜像最好也下载2020.2或者之前版本以保证兼容性。
