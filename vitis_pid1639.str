@@ -107,3 +107,27 @@ activateView("test_kernels", "test_kernels/test_kernels.prj", "SDXSettingsEditor
 selectTreeTable("test_system_hw_link.prj", "test_system > test_system_hw_link", EventType.DOUBLE_CLICK, "Explorer", "ProjectExplorer", "TreeViewer.NavigatorContentServiceContentProvider");
 selectToolBarButton("Vitis Shell", "test_system_hw_link", "WorkbenchWindow", "ToolItem.VITIS_SHELL");
 selectTreeTable("vmul_kernel", "binary_container_2", "test_system_hw_link", "SDXSettingsEditor", "TreeViewer.HwLinkAcceleratorTableContentProvider");
+selectToolBarButton("Vitis Shell", "test_system_hw_link", "WorkbenchWindow", "ToolItem.VITIS_SHELL");
+activateView("Explorer", "ProjectExplorer", "CTabItem.EXPLORER");
+selectTreeTable("test_system_hw_link.prj", "test_system > test_system_hw_link", EventType.POPUP_TRIGGER_CLICK, "Explorer", "ProjectExplorer", "TreeViewer.NavigatorContentServiceContentProvider");
+activateView("Assistant", "SDXAssistantView", "CTabItem.ASSISTANT");
+selectTreeTable("test_system", "test_system > test_system_hw_link", EventType.POPUP_TRIGGER_CLICK, "Assistant", "SDXAssistantView", "TreeViewer.AssistantContentProvider");
+selectMenuItem("Settings", "Assistant", "SDXAssistantView", "MenuItem.SETTINGS");
+selectTreeTable("binary_container_1", "test_system > test_system_hw_link > Hardware", "System Project Settings", "AssistantPreferencesDialog", "TreeViewer.PreferenceContentProvider");
+selectTreeTable("binary_container_1", "test_system > test_system_hw_link > Hardware", EventType.DOUBLE_CLICK, "Binary Container Settings", "AssistantPreferencesDialog", "TreeViewer.PreferenceContentProvider");
+selectTreeTable("vadd_kernel", "binary_container_1", "Binary Container Settings", "AssistantPreferencesDialog", "TreeViewer.ProfilingSettingsContentProvider");
+setSpinner("2", "Binary Container Settings", "AssistantPreferencesDialog", "AssistantPreferencesDialog");
+setSpinner("1", "Binary Container Settings", "AssistantPreferencesDialog", "AssistantPreferencesDialog");
+setSpinner("2", "Binary Container Settings", "AssistantPreferencesDialog", "AssistantPreferencesDialog");
+activateView("Explorer", "ProjectExplorer", "CTabItem.EXPLORER");
+selectTreeTable("binary_container_1", "test_system_hw_link", "SDXSettingsEditor", "TreeViewer.HwLinkAcceleratorTableContentProvider");
+activateView("Outline", "ContentOutline", "CTabItem.OUTLINE");
+selectTreeTable("binary_container_1", "test_system_hw_link", "SDXSettingsEditor", "TreeViewer.HwLinkAcceleratorTableContentProvider");
+activateView("Explorer", "ProjectExplorer", "CTabItem.EXPLORER");
+selectTreeTable("event_timer.cpp", "test_system > test > src", "Explorer", "ProjectExplorer", "TreeViewer.NavigatorContentServiceContentProvider");
+selectTreeTable("host.hpp", "test_system > test > src", "Explorer", "ProjectExplorer", "TreeViewer.NavigatorContentServiceContentProvider");
+selectTreeTable("host.cpp", "test_system > test > src", "Explorer", "ProjectExplorer", "TreeViewer.NavigatorContentServiceContentProvider");
+selectButton("Exit", "Confirm Exit", "MessageDialogWithToggle", "Button.EXIT");
+// Exiting Xilinx Vitis with a status code '0' at 8/28/22, 8:39:08 PM CST
+// Elapsed time: 58:11:19
+
