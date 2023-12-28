@@ -119,7 +119,7 @@
     
     ![图 多核多部署link样例](../img/mk_03-link.png)
 
-+ [为每个IP编写host](./src/kernel/host-03.cpp)
++ [为每个IP编写host](./src/host/host-03.cpp)
 
 对应的结果展示
 
