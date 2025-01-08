@@ -77,7 +77,7 @@ KERNEL ?= fft
 FREQUENCY ?= 300
 
 # TODO: 设置线程并行度，默认值为8
-THREADS ?= 8
+THREADS ?= 32
 
 # TODO: 设置优化等级，默认值为2
 OPT_LEVEL ?= 2

@@ -23,7 +23,8 @@ void fft_wrapper(vec_t X_R, vec_t X_I, vec_t& OUT_R, vec_t& OUT_I, std::string x
         // Creating Context and Command Queue for selected Device
         OCL_CHECK(err, context = cl::Context(device, nullptr, nullptr, nullptr, &err));
         OCL_CHECK(err, q = cl::CommandQueue(context, device,
-                                            CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE | CL_QUEUE_PROFILING_ENABLE, &err));
+                                            CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE | CL_QUEUE_PROFILING_ENABLE,
+                                            &err));
 
         std::cout << "Trying to program device[" << i << "]: " << device.getInfo<CL_DEVICE_NAME>() << std::endl;
         cl::Program program(context, {device}, bins, nullptr, &err);
@@ -143,8 +144,7 @@ void fft_wrapper(vec_t X_R, vec_t X_I, vec_t& OUT_R, vec_t& OUT_I, std::string x
 //         // Creating Context and Command Queue for selected Device
 //         OCL_CHECK(err, context = cl::Context(device, nullptr, nullptr, nullptr, &err));
 //         OCL_CHECK(err, q = cl::CommandQueue(context, device,
-//                                             CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE | CL_QUEUE_PROFILING_ENABLE,
-//                                             &err));
+//                                             CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE | CL_QUEUE_PROFILING_ENABLE, &err));
 
 //         std::cout << "Trying to program device[" << i << "]: " << device.getInfo<CL_DEVICE_NAME>() << std::endl;
 //         cl::Program program(context, {device}, bins, nullptr, &err);
@@ -218,21 +218,21 @@ void fft_wrapper(vec_t X_R, vec_t X_I, vec_t& OUT_R, vec_t& OUT_I, std::string x
 
 //     et.add("Memory object migration enqueue");
 //     OCL_CHECK(
-//         err, err = q.enqueueMigrateMemObjects({X_R_buf, X_I_buf}, 0 /* 0 means from host*/, nullptr,
-//         &events_write[0]));
-//     // q.finish();
+//         err, err = q.enqueueMigrateMemObjects({X_R_buf, X_I_buf}, 0 /* 0 means from host*/, nullptr, &events_write[0]));
 //     clWaitForEvents(1, (const cl_event*)&events_write[0]);
 
-//     et.add("OCL Enqueue task");
-//     OCL_CHECK(err, err = q.enqueueTask(krnl_fft, &events_write, &events_kernel[0]));
-//     et.add("Wait for kernel to complete");
-//     // q.finish();
-//     clWaitForEvents(1, (const cl_event*)&events_kernel[0]);
+//     int num_runs = 1000; //执行次数（测得当num-runs=1000左右时达到最大THROUGHPUT=475）
+//     et.add("OCL Enqueue task and wait for kernel to complete");
+//     auto t1 = std::chrono::high_resolution_clock::now();
+//     for (int i = 0; i < num_runs; i++) {
+//         OCL_CHECK(err, err = q.enqueueTask(krnl_fft, &events_write, &events_kernel[0]));
+//         clWaitForEvents(1, (const cl_event*)&events_kernel[0]);
+//     }
+//     auto t2 = std::chrono::high_resolution_clock::now();
 
 //     et.add("Read back computation results");
 //     // Copy Result from Device Global Memory to Host Local Memory
-//     OCL_CHECK(err, err = q.enqueueMigrateMemObjects({OUT_R_buf, OUT_I_buf}, CL_MIGRATE_MEM_OBJECT_HOST,
-//     &events_kernel,
+//     OCL_CHECK(err, err = q.enqueueMigrateMemObjects({OUT_R_buf, OUT_I_buf}, CL_MIGRATE_MEM_OBJECT_HOST, &events_kernel,
 //                                                     &events_read[0]));
 //     clWaitForEvents(1, (const cl_event*)&events_read[0]);
 //     et.finish();
@@ -241,4 +241,12 @@ void fft_wrapper(vec_t X_R, vec_t X_I, vec_t& OUT_R, vec_t& OUT_I, std::string x
 
 //     //打印各阶段用时
 //     et.print();
+
+//     //打印kernel吞吐量
+//     float average_time_in_sec =
+//         float(std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()) / 1000000 / num_runs;
+//     std::cout << "average_time: " << average_time_in_sec * 1000 << " ms" << std::endl;
+//     double throughput = 1; //表示执行一次长度为SIZE的FFT
+//     throughput /= average_time_in_sec;
+//     std::cout << "Compute THROUGHPUT = " << throughput << " /s" << std::endl;
 // }

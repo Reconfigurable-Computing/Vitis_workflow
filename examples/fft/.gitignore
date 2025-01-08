@@ -1,10 +1,9 @@
 build_dir*/
 _x_temp*/
-.Xil
 *.jou
 *.log
 build*
 _x*
 hls_prj
 reports
-.ipcache
+.*
