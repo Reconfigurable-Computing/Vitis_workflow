@@ -16,7 +16,7 @@ make_hw.sh：跑 hw流程（编译kernel的hw目标，并跑hw的主机代码）
 
 make_run.sh：跑sw_emu、hw_emu、hw的主机代码
 
-![image-20250106194714626](C:\Users\hanggu\AppData\Roaming\Typora\typora-user-images\image-20250106194714626.png)
+![image-20250106194714626](img/image-20250106194714626.png)
 
 
 
@@ -28,7 +28,7 @@ cleanh：清除所有关于host的文件。
 
 makeflie中所有写了TODO注释的都是需要配置的参数，例如：
 
-![image-20250108170352415](C:\Users\hanggu\AppData\Roaming\Typora\typora-user-images\image-20250108170352415.png)
+![image-20250108170352415](img/image-20250108170352415.png)
 
 
 
