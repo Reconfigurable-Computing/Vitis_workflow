@@ -1,0 +1,9 @@
+build_dir*/
+_x_temp*/
+*.jou
+*.log
+build*
+_x*
+hls_prj
+reports
+.*

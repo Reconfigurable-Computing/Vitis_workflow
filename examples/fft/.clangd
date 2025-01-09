@@ -1,0 +1,7 @@
+CompileFlags:
+  Add: [
+      "-I/home/hanggu/USTC/Vitis_workflow/examples/fft",
+      "-I/tools/Xilinx/Vitis_HLS/2023.1/include",
+      "-I/opt/xilinx/xrt/include",
+      "-I/home/hanggu/USTC/Vitis_workflow/examples/fft/common/include",
+    ]
