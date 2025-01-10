@@ -18,6 +18,8 @@ FPGA：  ZCU104、Alevo U50
 
 4. [Makefile](./Makefile/README.md)：vitis工具流编译文件规则，一键式部署方案设计。[跳转链接](./Makefile/README.md)
 
+5. [examples](./example/fft/README.md)：加速器部署样例以及编译运行脚本，涉及到在完成加速器设计之后将硬件设计部署到板卡或模拟器的编译过程。
+
 
 ## 2 环境准备
 
