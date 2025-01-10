@@ -39,12 +39,13 @@ help::
 	$(ECHO) "      Command to build host application."
 	$(ECHO) ""
 
+# NOTE: 本Makefile仅支持生成单个xclbin(统一命名为fused.xclbin)，不支持切换xclbin
 # ##################### Setting up default value of TARGET ##########################
 # TODO: 设置TARGET
 TARGET ?= sw_emu
 
 # ################### Setting up default value of DEVICE ##############################
-# TODO: 设置板卡
+# TODO: 设置板卡（可选值：u280 u50）
 BOARD ?= u280
 
 # 以下是几个板卡型号：
@@ -70,17 +71,17 @@ HOST_ARCH ?= x86
 
 CXXFLAGS := -I${PWD}
 
-# TODO: 设置kernel名称（kernel文件夹下的cpp文件名,见（Setting Rules for Binary Containers (Building Kernels）） 
-KERNEL ?= fft
+# TODO: 设置kernel名称（kernel文件夹下的cpp文件名.top function必须和cpp名称一样，见"Setting Rules for Binary Containers Building Kernels"） 
+KERNEL_LIST := fft
 
 # TODO: 设置频率，默认值为300
 FREQUENCY ?= 300
 
 # TODO: 设置线程并行度，默认值为8
-THREADS ?= 32
+THREADS ?= 8
 
-# TODO: 设置优化等级，默认值为2
-OPT_LEVEL ?= 2
+# TODO: 设置优化等级，默认值为3
+OPT_LEVEL ?= 3
 
 # TODO: 设置报告级别
 REPORT_LEVEL ?= 2
@@ -117,18 +118,13 @@ export XCL_BINDIR = $(XCLBIN_DIR)
 # ######################### Setting up Host Variables #########################
 # TODO: 在这里include需要的头文件和链接需要的库
 #Include Required Host Source Files
-# HOST_SRCS += $(CUR_DIR)/host/main.cpp
-# HOST_SRCS += $(CUR_DIR)/host/answer.cpp
 HOST_SRCS += $(CUR_DIR)/common/include/xcl2.cpp
 HOST_SRCS += $(CUR_DIR)/common/include/event_timer.cpp
-HOST_SRCS += $(CUR_DIR)/host/fft_host.cpp
-CXXFLAGS += -I$(CUR_DIR)/host
-# LDFLAGS += -lstdc++
+HOST_SRCS += $(CUR_DIR)/host/host.cpp
 
+CXXFLAGS += -I$(CUR_DIR)
+CXXFLAGS += -I$(CUR_DIR)/host
 CXXFLAGS += -I$(CUR_DIR)/common/include
-
-CXXFLAGS += -I$(CUR_DIR)/host
-CXXFLAGS += -I$(CUR_DIR)/include
 
 ifeq ($(TARGET),sw_emu)
 CXXFLAGS += -D SW_EMU_TEST
@@ -154,30 +150,35 @@ endif
 EXE_NAME := host.exe
 EXE_FILE := $(BUILD_DIR)/$(EXE_NAME)
 # TODO: 设置host程序参数(xclbin文件路径)
-HOST_ARGS := --xclbin $(BUILD_DIR)/$(KERNEL).xclbin
-#HOST_ARGS := --xclbin $(BUILD_DIR)/$(KERNEL).xclbin --offset $(CUR_DIR)/data/data-csr-offset.mtx --index $(CUR_DIR)/data/data-csr-indicesweights.mtx
+HOST_ARGS := --xclbin $(BUILD_DIR)/fused.xclbin
+#HOST_ARGS := --xclbin $(BUILD_DIR)/fused.xclbin --offset $(CUR_DIR)/data/data-csr-offset.mtx --index $(CUR_DIR)/data/data-csr-indicesweights.mtx
 
 # ##################### Kernel compiler global settings ##########################
 VPP_FLAGS += -t $(TARGET) --platform $(XPLATFORM) --save-temps --optimize $(OPT_LEVEL)
 VPP_FLAGS += --hls.jobs $(THREADS)
 VPP_LDFLAGS += --vivado.synth.jobs $(THREADS) --vivado.impl.jobs $(THREADS)
 
-# ifneq (,$(shell echo $(XPLATFORM) | awk '/u280/'))
-# VPP_FLAGS += --config $(CUR_DIR)/conn_u280.cfg
-# endif
-
+# ---------------------
+# !!! 在编译阶段不使用 .cfg !!!
+# ---------------------
 # 设置cfg文件
-ifneq (,$(shell echo $(XPLATFORM) | awk '/$(BOARD)/'))
-VPP_FLAGS += --config $(CUR_DIR)/conn_$(BOARD).cfg
-endif
+# ifneq (,$(shell echo $(XPLATFORM) | awk '/$(BOARD)/'))
+# VPP_FLAGS += --config $(CUR_DIR)/conn_$(BOARD).cfg
+# endif
 
 VPP_FLAGS += -I$(CUR_DIR)/kernel
 
-$(KERNEL)_VPP_FLAGS +=  -D KERNEL_NAME=$(KERNEL)
+# 对于KERNEL_LIST中的每一个kernel定义一个VPP_FLAGS 和 VPP_LDFLAGS
+define SET_KERNEL_VPP_FLAGS
+$(1)_VPP_FLAGS += -D KERNEL_NAME=$(1)
+$(1)_VPP_FLAGS += --hls.clock $(FREQUENCY)000000:$(1)
+endef
 
-# 频率
-$(KERNEL)_VPP_FLAGS += --hls.clock $(FREQUENCY)000000:$(KERNEL)
-VPP_LDFLAGS_$(KERNEL) += --kernel_frequency $(FREQUENCY)
+# 只在链接时一次性指定频率
+VPP_LDFLAGS += --kernel_frequency $(FREQUENCY)
+
+# Apply to each kernel
+$(foreach KERNEL, $(KERNEL_LIST), $(eval $(call SET_KERNEL_VPP_FLAGS,$(KERNEL))))
 
 # 设置report level
 ifeq ($(REPORT_LEVEL), estimate)
@@ -188,11 +189,15 @@ else
 $(error [ERROR]: Unsupported REPORT_LEVEL=$(REPORT_LEVEL). Please use 0, 1, 2, or estimate.)
 endif
 
-
 # ############################ Declaring Binary Containers ##########################
+# Initialize BINARY_CONTAINERS and their OBJS
+# 一个BINARY_CONTAINER对应生成一个xclbin文件。本makefile只支持生成一个fused.xclbin文件
+BINARY_CONTAINERS += $(BUILD_DIR)/fused.xclbin
 
-BINARY_CONTAINERS += $(BUILD_DIR)/$(KERNEL).xclbin
-BINARY_CONTAINER_$(KERNEL)_OBJS += $(TEMP_DIR)/$(KERNEL).xo
+# 该xclbin文件内含的kernel object(.xo)文件
+#TODO: 关于kernel在FPGA上的连接关系，请修改.cfg文件
+# BINARY_CONTAINER_$(KERNEL)_OBJS += $(TEMP_DIR)/$(KERNEL).xo
+BINARY_CONTAINER_fused_OBJS := $(foreach KERNEL, $(KERNEL_LIST), $(TEMP_DIR)/$(KERNEL).xo)
 
 # ######################### Setting Targets of Makefile ################################
 DATA_DIR += $(CUR_DIR)/data
@@ -222,15 +227,22 @@ endif
 build: xclbin
 
 # ################ Setting Rules for Binary Containers (Building Kernels) ################
-$(TEMP_DIR)/$(KERNEL).xo: $(CUR_DIR)/kernel/$(KERNEL).cpp
-	$(ECHO) "Compiling Kernel: $(KERNEL)"
+# 编译阶段：仅 -c，不带 config
+$(TEMP_DIR)/%.xo: $(CUR_DIR)/kernel/%.cpp
+	$(ECHO) "Compiling Kernel: $*"
 	mkdir -p $(TEMP_DIR)
-	$(VPP) -c $($(KERNEL)_VPP_FLAGS) $(VPP_FLAGS) -k $(KERNEL) -I'$(<D)' --temp_dir $(TEMP_DIR) --report_dir $(TEMP_REPORT_DIR) -o'$@' $^
+	$(VPP) -c $($*_VPP_FLAGS) $(VPP_FLAGS) -k $* \
+	       -I'$(<D)' --temp_dir $(TEMP_DIR) --report_dir $(TEMP_REPORT_DIR) \
+	       -o '$@' $^
 
-
-$(BUILD_DIR)/$(KERNEL).xclbin: $(BINARY_CONTAINER_$(KERNEL)_OBJS)
+# 链接阶段：统一使用 --config conn_$(BOARD).cfg
+$(BUILD_DIR)/fused.xclbin: $(BINARY_CONTAINER_fused_OBJS)
 	mkdir -p $(BUILD_DIR)
-	$(VPP) -l $(VPP_FLAGS) --temp_dir $(TEMP_DIR) --report_dir $(BUILD_REPORT_DIR)/$(KERNEL) $(VPP_LDFLAGS) $(VPP_LDFLAGS_$(KERNEL)) -o '$@' $(+)
+	$(VPP) -l $(VPP_FLAGS) \
+	       --config $(CUR_DIR)/conn_$(BOARD).cfg \
+	       --temp_dir $(TEMP_DIR) --report_dir $(BUILD_REPORT_DIR)/fused \
+	       $(VPP_LDFLAGS) $(foreach KERNEL, $(KERNEL_LIST), $(VPP_LDFLAGS_$(KERNEL))) \
+	       -o '$@' $+
 
 
 # ################# Setting Rules for Host (Building Host Executable) ################
@@ -243,12 +255,15 @@ endif
 	mkdir -p $(BUILD_DIR)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS)
 
+# emconfig是一个伪目标，不是实际生成的文件
 emconfig:$(EMCONFIG_DIR)/emconfig.json
+# $(EMCONFIG_DIR)/emconfig.json是一个真实目标
 $(EMCONFIG_DIR)/emconfig.json:
 	emconfigutil --platform $(XPLATFORM) --od $(EMCONFIG_DIR)
 
 
 # ###############Setting Essential Checks And Running Rules For Vitis Flow #############
+# run目标依赖于all目标
 run: all
 ifeq ($(TARGET),$(filter $(TARGET),sw_emu hw_emu))
 	$(CP) $(EMCONFIG_DIR)/emconfig.json .
