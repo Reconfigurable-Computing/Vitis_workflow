@@ -1,6 +1,5 @@
 #include "event_timer.hpp"
 #include "global.h"
-#include "kernel/fft.h"
 
 // fft内核的opencl wrapper
 void fft_wrapper(vec_t X_R, vec_t X_I, vec_t& OUT_R, vec_t& OUT_I, std::string xclbin) {
@@ -75,13 +74,10 @@ void fft_wrapper(vec_t X_R, vec_t X_I, vec_t& OUT_R, vec_t& OUT_I, std::string x
     et.add("Map host buffers to OpenCL buffers");
     OCL_CHECK(err, X_R_buf = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE,
                                         sizeof(DTYPE) * X_R.size(), &X_R_ext, &err));
-
     OCL_CHECK(err, X_I_buf = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE,
                                         sizeof(DTYPE) * X_I.size(), &X_I_ext, &err));
-
     OCL_CHECK(err, OUT_R_buf = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE,
                                           sizeof(DTYPE) * OUT_R.size(), &OUT_R_ext, &err));
-
     OCL_CHECK(err, OUT_I_buf = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE,
                                           sizeof(DTYPE) * OUT_I.size(), &OUT_I_ext, &err));
     et.finish();
@@ -96,7 +92,7 @@ void fft_wrapper(vec_t X_R, vec_t X_I, vec_t& OUT_R, vec_t& OUT_I, std::string x
     OCL_CHECK(err, err = q.enqueueMigrateMemObjects({X_R_buf, X_I_buf}, 0 /* 0 means from host*/));
     q.finish();
 
-    int num_runs = 1000;//执行次数（测得当num-runs=1000左右时达到最大THROUGHPUT=475）
+    int num_runs = 1;//执行次数（测得当num-runs=1000左右时达到最大THROUGHPUT=475）
     et.add("OCL Enqueue task and wait for kernel to complete");
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < num_runs; i++) {
