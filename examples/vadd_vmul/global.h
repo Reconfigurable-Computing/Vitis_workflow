@@ -18,7 +18,8 @@ const int DDR[2] = {CHANNEL_NAME(32), CHANNEL_NAME(33)};
 //使用更现代化的std容器。若不想使用vector容器，可使用utils.hpp中提供的方法对齐创建数组，写法为：DTYPE* In_R =
 // aligned_alloc<DTYPE>(SIZE * sizeof(DTYPE))
 // TODO: 修改内存分配类型
-using vec_t = std::vector<float, aligned_allocator<float> >; // fft中使用的是float类型
+using vec_t = std::vector<int, aligned_allocator<int> >; // vadd,vmul中使用的是int类型
 
-typedef float DTYPE;
-#define SIZE 1024 /* SIZE OF FFT */
+#define N 1000
+
+typedef int dt;
